@@ -1,4 +1,5 @@
 <h1>{{title}}</h1>
+<mat-slider (change)="getValue($event)" min="1" max="100" step="1" value="1"></mat-slider>
 <nav>
   <a class="link" routerLink="/dashboard">Dashboard</a>
   <a class="link" routerLink="/heroes">Heroes</a>
@@ -6,3 +7,12 @@
 </nav>
 <router-outlet></router-outlet>
 <app-messages></app-messages>
+<!-- <h4>Angular Basic mat-select Example</h4>
+<mat-form-field>
+  <mat-label>Select Website</mat-label>
+  <mat-select>
+   <mat-option *ngFor="let website of websites" [value]="website.value">
+      {{website.viewValue}}
+    </mat-option>
+  </mat-select>
+</mat-form-field> -->

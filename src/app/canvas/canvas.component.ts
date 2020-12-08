@@ -1,13 +1,30 @@
 import { Component, OnInit, ViewChild, ElementRef, HostListener } from '@angular/core';
 import { SquareComponent } from '../square/square.component';
+// import { SelectComponent } from '../select/select.component';
+
+interface Color {
+  value: string;
+  viewValue: string;
+}
 
 @Component({
   selector: 'app-canvas',
   template: `
+    <h4>Choose Color</h4>
+      <mat-form-field appearance="fill">
+        <mat-label>Drawing color</mat-label>
+        <mat-select [(ngModel)]="selectedValue" name="color">
+          <mat-option *ngFor="let color of colors" [value]="color.value">
+            {{color.viewValue}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
     <canvas (document:mousedown)="startPosition($event)" (document:mouseup)="endPosition()" (document:mousemove)="draw($event)" id='canvas' #myCanvas></canvas>
     <button (click)="animate()">Play</button>`,
   styleUrls: ['./canvas.component.css']
 })
+
 export class CanvasComponent implements OnInit {
   @ViewChild('myCanvas', { static: true })
   canvas: ElementRef<HTMLCanvasElement>;
@@ -15,6 +32,16 @@ export class CanvasComponent implements OnInit {
   public ctx: CanvasRenderingContext2D;
   public painting: boolean;
   public mouse: any;
+  public selectedValue: string;
+  public iDunno: string;
+
+  colors: Color[] = [
+    {value: 'red', viewValue: 'Red'},
+    {value: 'blue', viewValue: 'Blue'},
+    {value: 'green', viewValue: 'Green'}
+  ];
+
+  // constructor(private select: SelectComponent) { }
 
   ngOnInit(): void {
     this.ctx = this.canvas.nativeElement.getContext('2d');
@@ -22,12 +49,12 @@ export class CanvasComponent implements OnInit {
     this.canvas.nativeElement.height = window.innerHeight;
     this.painting = false;
     this.mouse = {x : 0, y : 0, lastX : 0, lastY : 0}
-  }
 
+  }
 
   startPosition(e) {
     this.painting = true;
-    this.draw(e)
+    this.draw(e);
   }
 
   endPosition() {
@@ -40,6 +67,7 @@ export class CanvasComponent implements OnInit {
     var pos = this.getMousePos(this.canvas.nativeElement, e);
     this.ctx.lineWidth = 5;
     this.ctx.lineCap = 'round';
+    this.ctx.strokeStyle = this.selectedValue;
     this.ctx.lineTo(pos.x, pos.y)
     this.ctx.stroke();
     this.ctx.beginPath();
